@@ -209,10 +209,28 @@ ul {
   margin-top: 20px;
 }
 
-
 .btn-success,
+.btn-warning,
 .btn-danger {
 	display:block;
 	width: 100%;
 	margin: 40px auto;
+}
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ol.example li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+ol.example li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
 }

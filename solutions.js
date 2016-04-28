@@ -8,60 +8,61 @@ $(document).ready(function() {
   {name: "Jalapeno", status: "complete", price: ".15", quantity: 2}
   ];
 
-
-// Before we start anything, string up the css file, this javascript file, and
-// the jQuery CDN to grocery.html file.
-
-//1. Display the existing list of grocery items (from the grocery array)
-// in an unordered list in the "list" id that already exists in grocery.html.
-// Display each item's name, price, and quantity.
-// Ex: Tomatoes (5) @ $3.99
-for(i=0; i<groceries.length; i++){
-  var item = groceries[i]
-
-  $("#list").append($("<li>" + item.name + " (" + item.quantity + ") @ $" + item.price + "</li>"))
-}
-
-function displayTotal(){
-  var total = 0;
   for(i=0; i<groceries.length; i++){
-    total += (groceries[i].quantity * groceries[i].price)
+    var item = groceries[i]
+    if(groceries[i].status == 'needed'){
+      $("#list").append($("<li>" + item.name + " (" + item.quantity + ") @ $" + item.price + "</li>"))
+    }else{
+      $("#purchased").append($("<li>" + item.name + " (" + item.quantity + ") @ $" + item.price + "</li>"))
+    }
   }
-  $(".totalCost h4 span").text("$" + total.toFixed(2))
-}
 
-displayTotal();
-
-//2. Use the inputs and add button to add grocery items to the beginning of the list.
-// Default status should be "needed". The item should appear above the existing grocery items.
-
-$(".btn-success").click(function(){
-  var nameInput = $("#addItem").val();
-  var priceInput = $("#addPrice").val();
-  var quantityInput = $("#addQuantity").val();
-  if (nameInput == '' || priceInput == '' || quantityInput == ''){
-    alert("Please fill in all fields")
+  function displayTotal(){
+    var total = 0;
+    for(i=0; i<groceries.length; i++){
+      total += (groceries[i].quantity * groceries[i].price)
+    }
+    $(".totalCost h4 span").text("$" + total.toFixed(2))
   }
-  else {
-    addItem(nameInput, priceInput, quantityInput);
-  }
-});
 
-function addItem(name, price, quantity){
-  groceries.unshift({name: name, status: "needed", price: price, quantity: quantity});
-  updateList(groceries[0]);
   displayTotal();
-};
 
-function updateList(item){
-  $("<li>" + item.name + " (" + item.quantity + ") @ " + item.price + "</li>")
-  .insertBefore('#list li:first-child')
-}
+  $(".btn-success").click(function(){
+    var nameInput = $("#addItem").val();
+    var priceInput = $("#addPrice").val();
+    var quantityInput = $("#addQuantity").val();
+    if (nameInput == '' || priceInput == '' || quantityInput == ''){
+      alert("Please fill in all fields")
+    }
+    else {
+      addItem(nameInput, priceInput, quantityInput);
+    }
+  });
 
-//3. Make sure that the grocery list displayed updates when you add an item to the list.
+  function addItem(name, price, quantity){
+    groceries.unshift({name: name, status: "needed", price: price, quantity: quantity});
+    updateList();
+  };
 
-//3. Display the total cost of the groceries. Make sure this updates as you add items to the list.
+  function updateList(){
+    $('#list').empty();
+    $('#purchased').empty();
+    for(i=0; i<groceries.length; i++){
+      var item = groceries[i]
+      if(groceries[i].status == 'needed'){
+        $("#list").append($("<li>" + item.name + " (" + item.quantity + ") @ $" + item.price + "</li>"))
+      }else{
+        $("#purchased").append($("<li>" + item.name + " (" + item.quantity + ") @ $" + item.price + "</li>"))
+      }
+    }
+    displayTotal();
+  }
 
-//4. Put a check in to make sure users aren't adding items without a name, price, or quantity.
+  $('.btn-warning').on('click', function(){
+    groceries.shift();
+    updateList();
+  });
+
+  $('#list').sortable();
 
 });
