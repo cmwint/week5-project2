@@ -65,4 +65,11 @@ $(document).ready(function() {
 
   $('#list').sortable();
 
+
+  $('#list').on('dblclick','li',function(){
+    var x = ($(this).index());
+    groceries[x].status = "complete";
+    updateList();
+  });
+
 });
